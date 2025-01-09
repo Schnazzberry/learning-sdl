@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <vector>
 
+
 //Starts up SDL and creates window
 bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
     SDL_Window* window;
@@ -37,7 +38,7 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_W
 
 
 //Loads media
-bool loadMedia(SDL_Surface** pMediaSurface, char filename[]) {
+bool loadMedia(vector<SDL_Surface**> pMediaSurface, vector<char[]> filename[]) {
     SDL_Surface* mediaSurface;
 	//Loading success flag
 	bool success = true;
@@ -53,6 +54,18 @@ bool loadMedia(SDL_Surface** pMediaSurface, char filename[]) {
 
 	return success;	
 }
+
+
+SDL_Surface* loadSurface(char path[]) {
+    SDL_Surface* loadedSurface = SDL_LoadBMP(path);
+    if(loadedSurface == NULL) {
+        printf("Unable to load image %s! SDL_Error: %s\n", path, SDL_GetError());
+    }
+
+    return loadedSurface;
+}
+
+
 
 
 //Frees Surface and sets to NULL
