@@ -1,8 +1,9 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <vector>
 
 //Starts up SDL and creates window
-bool init(SDL_Window** windowS, SDL_Surface** screenSurfaceS, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
+bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
     SDL_Window* window;
     SDL_Surface* screenSurface;
 	//Initialization flag
@@ -28,44 +29,67 @@ bool init(SDL_Window** windowS, SDL_Surface** screenSurfaceS, const int SCREEN_W
 		}
 	}
 
-    *windowS = window;
-    *screenSurfaceS = screenSurface;
+    *pWindow = window;
+    *pScreenSurface = screenSurface;
 
 	return success;
 }
 
 
 //Loads media
-bool loadMedia(SDL_Surface** imgSurfaceS, char filename[]) {
-    SDL_Surface* imgSurface;
+bool loadMedia(SDL_Surface** pMediaSurface, char filename[]) {
+    SDL_Surface* mediaSurface;
 	//Loading success flag
 	bool success = true;
 
 	//Load splash image
-	imgSurface = SDL_LoadBMP(filename);
-	if (imgSurface == NULL) {
+	mediaSurface = SDL_LoadBMP(filename);
+	if (mediaSurface == NULL) {
 		printf("Unable to load image %s! SDL_Error: %s\n", filename, SDL_GetError());
 	       success = false;
 	}
 
-    *imgSurfaceS = imgSurface;
+    *pMediaSurface = mediaSurface;
 
 	return success;	
 }
 
 
 //Frees Surface and sets to NULL
-void close(SDL_Surface** surface) {
+void close(SDL_Surface** pSurface) {
 	//Deallocate surface
-	SDL_FreeSurface(*surface);
-	*surface = NULL;
-    surface = NULL;
+	SDL_FreeSurface(*pSurface);
+	*pSurface = NULL;
+    pSurface = NULL;
 }
 
 //Frees window and sets to NULL
-void close(SDL_Window** window) {
+void close(SDL_Window** pWindow) {
 	//Deallocate window
-	SDL_DestroyWindow(*window);
-	*window = NULL;
-    window = NULL;
+	SDL_DestroyWindow(*pWindow);
+	*pWindow = NULL;
+    pWindow = NULL;
 }
+
+
+// Frees all the surfaces and windows in a list and deletes (pointer to pointer)
+void closeAll(std::vector<SDL_Surface**> pSurfaces = {}, std::vector<SDL_Window**> pWindows = {}) {
+    for (int i = pWindows.size()-1; i >= 0; i--) {
+		if(pWindows.at(i) != NULL) {
+			close(pWindows.at(i));
+			delete pWindows.at(i);
+		}
+	}
+	pWindows.clear();
+	
+	for (int i = pSurfaces.size()-1; i >= 0; i--) {
+		if (pSurfaces.at(i) != NULL) {
+			close(pSurfaces.at(i));
+			delete pSurfaces.at(i);
+		}
+    }
+    pSurfaces.clear();
+
+}
+
+
