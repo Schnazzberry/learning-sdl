@@ -64,12 +64,6 @@ bool loadMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const i
 }
 
 
-
-
-
-
-
-
 //Frees Surface and sets to NULL
 void close(SDL_Surface* pSurface) {
 	//Deallocate surface
