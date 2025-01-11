@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
-#include <vector>
+#include <string>
 
 
 //Starts up SDL and creates window
@@ -36,73 +36,70 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_W
 	return success;
 }
 
-
-//Loads media
-bool loadMedia(vector<SDL_Surface**> pMediaSurface, vector<char[]> filename[]) {
-    SDL_Surface* mediaSurface;
-	//Loading success flag
-	bool success = true;
-
-	//Load splash image
-	mediaSurface = SDL_LoadBMP(filename);
-	if (mediaSurface == NULL) {
-		printf("Unable to load image %s! SDL_Error: %s\n", filename, SDL_GetError());
-	       success = false;
-	}
-
-    *pMediaSurface = mediaSurface;
-
-	return success;	
-}
-
-
-SDL_Surface* loadSurface(char path[]) {
-    SDL_Surface* loadedSurface = SDL_LoadBMP(path);
+//Loads media into a surface
+SDL_Surface* loadSurface(std::string path) {
+    SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
     if(loadedSurface == NULL) {
-        printf("Unable to load image %s! SDL_Error: %s\n", path, SDL_GetError());
+        printf("Unable to load image %s! SDL_Error: %s\n", path.c_str(), SDL_GetError());
     }
 
     return loadedSurface;
 }
 
+//Loads list of media into list of surfaces
+bool loadMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const int numSurfaces) {
+    //Loading success flag
+	bool success = true;
+
+	//Load splash image
+    for(int i = 0; i < numSurfaces; i++) {
+        pMediaSurfaces[i]=loadSurface(paths[i]);
+       if (pMediaSurfaces[i] == NULL) {
+           printf("Failed to load image %s! SDL_Error: %s\n", paths[i].c_str(), SDL_GetError()); 
+           success = false;
+       }
+    }
+
+	return success;	
+}
+
+
+
+
+
 
 
 
 //Frees Surface and sets to NULL
-void close(SDL_Surface** pSurface) {
+void close(SDL_Surface* pSurface) {
 	//Deallocate surface
-	SDL_FreeSurface(*pSurface);
-	*pSurface = NULL;
+	SDL_FreeSurface(pSurface);
     pSurface = NULL;
 }
 
 //Frees window and sets to NULL
-void close(SDL_Window** pWindow) {
+void close(SDL_Window* pWindow) {
 	//Deallocate window
-	SDL_DestroyWindow(*pWindow);
-	*pWindow = NULL;
-    pWindow = NULL;
+	SDL_DestroyWindow(pWindow);
+	pWindow = NULL;
 }
 
 
-// Frees all the surfaces and windows in a list and deletes (pointer to pointer)
-void closeAll(std::vector<SDL_Surface**> pSurfaces = {}, std::vector<SDL_Window**> pWindows = {}) {
-    for (int i = pWindows.size()-1; i >= 0; i--) {
-		if(pWindows.at(i) != NULL) {
-			close(pWindows.at(i));
-			delete pWindows.at(i);
+//Frees all the windows in a list (does not call delete[])
+void closeAllWindows(SDL_Window* pWindows[], int numWindows) {
+	for (int i = numWindows-1; i >= 0; i--) {
+		if(pWindows[i] != NULL) {
+			close(pWindows[i]);
 		}
 	}
-	pWindows.clear();
-	
-	for (int i = pSurfaces.size()-1; i >= 0; i--) {
-		if (pSurfaces.at(i) != NULL) {
-			close(pSurfaces.at(i));
-			delete pSurfaces.at(i);
-		}
-    }
-    pSurfaces.clear();
-
 }
 
+//Frees all the surfaces in a list (does not call delete[])
+void closeAllSurfaces(SDL_Surface* pSurfaces[], int numSurfaces) {
+	for (int i = numSurfaces-1; i >= 0; i--) {
+		if (pSurfaces[i] != NULL) {
+			close(pSurfaces[i]);
+		}
+    }
+}
 
