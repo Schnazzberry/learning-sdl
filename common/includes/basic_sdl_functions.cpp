@@ -64,35 +64,37 @@ bool loadMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const i
 }
 
 
-//Frees Surface and sets to NULL
-void close(SDL_Surface* pSurface) {
-	//Deallocate surface
-	SDL_FreeSurface(pSurface);
-    pSurface = NULL;
-}
-
 //Frees window and sets to NULL
-void close(SDL_Window* pWindow) {
+void close(SDL_Window** pWindow) {
 	//Deallocate window
-	SDL_DestroyWindow(pWindow);
-	pWindow = NULL;
+	SDL_DestroyWindow(*pWindow);
+	*pWindow = NULL;
 }
-
 
 //Frees all the windows in a list (does not call delete[])
 void closeAllWindows(SDL_Window* pWindows[], int numWindows) {
 	for (int i = numWindows-1; i >= 0; i--) {
 		if(pWindows[i] != NULL) {
-			close(pWindows[i]);
+			SDL_DestroyWindow(pWindows[i]);
+			pWindows[i] = NULL;
 		}
 	}
+} // Might have memory leak with assigned surface. Haven't tested.
+
+
+//Frees Surface and sets to NULL
+void close(SDL_Surface** pSurface) {
+	//Deallocate surface
+	SDL_FreeSurface(*pSurface);
+    *pSurface = NULL;
 }
 
 //Frees all the surfaces in a list (does not call delete[])
 void closeAllSurfaces(SDL_Surface* pSurfaces[], int numSurfaces) {
 	for (int i = numSurfaces-1; i >= 0; i--) {
 		if (pSurfaces[i] != NULL) {
-			close(pSurfaces[i]);
+			SDL_FreeSurface(pSurfaces[i]);
+			pSurfaces[i] = NULL;
 		}
     }
 }

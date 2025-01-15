@@ -18,10 +18,10 @@ SDL_Surface* loadSurface(std::string path);
 
 
 //Frees Surface and sets to NULL
-void close(SDL_Surface* pSurface);
+void close(SDL_Surface** pSurface);
 
 //Frees window and sets to NULL
-void close(SDL_Window* pWindow);
+void close(SDL_Window** pWindow);
 
 //Frees all the windows in a list (calls delete[])
 void closeAllWindows(SDL_Window* pWindows[], int numWindows);

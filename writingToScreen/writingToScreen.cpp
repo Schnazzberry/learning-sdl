@@ -23,7 +23,7 @@ int SCREEN_WIDTH = 640;
 int SCREEN_HEIGHT = 480;
 
 void terminate() {
-	close(*gWindow);
+	close(gWindow);
 	delete gWindow;
 	delete gScreenSurface;
 

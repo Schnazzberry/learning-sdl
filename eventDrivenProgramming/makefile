@@ -4,8 +4,8 @@ main: keyPresses.o basic_sdl_functions.o
 keyPresses.o: keyPresses.cpp
 	g++ -c keyPresses.cpp -o keyPresses.o
 
-basic_sdl_functions.o: basic_sdl_functions.cpp
-	g++ -c basic_sdl_functions.cpp -o basic_sdl_functions.o 
+basic_sdl_functions.o: ../common/includes/basic_sdl_functions.cpp
+	g++ -c ../common/includes/basic_sdl_functions.cpp -o basic_sdl_functions.o 
 
 clean:
 	rm -f *.o main
