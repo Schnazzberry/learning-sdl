@@ -61,7 +61,7 @@ int main(int argc, char* args[])
     } 
     else
     {
-        if(!loadMedia(pkeyPressSurfaces, paths, KEY_PRESS_SURFACE_TOTAL)) {
+        if(!loadMedia(pkeyPressSurfaces, paths, KEY_PRESS_SURFACE_TOTAL,(*pScreenSurface)->format)) {
             printf("Failed to load media! Terminating Program.\n");
         } 
         else

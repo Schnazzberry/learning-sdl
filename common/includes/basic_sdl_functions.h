@@ -11,10 +11,10 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_W
 
 
 //Loads media into list of surfaces
-bool loadMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const int numSurfaces);
+bool loadMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const int numSurfaces, const SDL_PixelFormat* screenPixelFormat);
 
 //loads media into a surface
-SDL_Surface* loadSurface(std::string path);
+SDL_Surface* loadSurface(std::string path, const SDL_PixelFormat* screenPixelFormat);
 
 
 //Frees Surface and sets to NULL

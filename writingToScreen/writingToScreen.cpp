@@ -46,7 +46,7 @@ int main(int argc, char* args[])
 	else
     { 
 		// Load media
-		if (!loadMedia(imgSurfaces, filenames, IMAGE_SURFACE_COUNT))
+		if (!loadMedia(imgSurfaces, filenames, IMAGE_SURFACE_COUNT, (*gScreenSurface)->format))
         {
 			printf("Failed to load media!\n");
 		}
