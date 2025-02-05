@@ -1,9 +1,10 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <string>
 
 
-//Starts up SDL and creates window
+//Starts up SDL and creates window SDL_INIT_VIDEO & IMG_INIT
 bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
     SDL_Window* window;
     SDL_Surface* screenSurface;
@@ -25,8 +26,16 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_W
 			success = false;
 		}
 		else {
-			//Get window surface
-			screenSurface = SDL_GetWindowSurface(window);
+			//Initialize PNG Loading
+			int imgFlags = IMG_INIT_PNG;
+			if ( !(IMG_Init(imgFlags) & imgFlags) ) {
+				printf("SDL_image could not initialize! SDL_image Error: %s/n", SDL_GetError());
+				success = false;
+			}
+			else {
+				//Get window surface
+				screenSurface = SDL_GetWindowSurface(window);
+			}
 		}
 	}
 
@@ -36,12 +45,12 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_W
 	return success;
 }
 
-//Loads media into a surface
+//Loads media into a surface using IMG_Load()
 SDL_Surface* loadSurface(const std::string path, const SDL_PixelFormat* screenPixelFormat) {
 	//The final optimized image
 	SDL_Surface* optimizedSurface = NULL;
 
-    SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
     if(loadedSurface == NULL) {
         printf("Unable to load image %s! SDL_Error: %s\n", path.c_str(), SDL_GetError());
     }
@@ -61,13 +70,13 @@ SDL_Surface* loadSurface(const std::string path, const SDL_PixelFormat* screenPi
 }
 
 //Loads list of media into list of surfaces
-bool loadMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const int numSurfaces, const SDL_PixelFormat* screenPixelFormat) {
+bool loadAllMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const int numSurfaces, SDL_Surface** pScreenSurface) {
     //Loading success flag
 	bool success = true;
 
 	//Load splash image
     for(int i = 0; i < numSurfaces; i++) {
-        pMediaSurfaces[i]=loadSurface(paths[i], screenPixelFormat);
+        pMediaSurfaces[i]=loadSurface(paths[i], (*pScreenSurface)->format);
        if (pMediaSurfaces[i] == NULL) {
            printf("Failed to load image %s! SDL_Error: %s\n", paths[i].c_str(), SDL_GetError()); 
            success = false;
@@ -75,6 +84,20 @@ bool loadMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const i
     }
 
 	return success;	
+}
+
+bool loadMedia(SDL_Surface** pMediaSurface, const std::string path, SDL_Surface** pScreenSurface) {
+	// Loading Success flag
+	bool success = true;
+
+	//Load splash image
+	*pMediaSurface = loadSurface(path, (*pScreenSurface)->format);
+	if (*pMediaSurface == NULL) {
+		printf("Failed to load image %s! SDL_Error: %s\n", path.c_str(), SDL_GetError());
+		success = false;
+	}
+
+	return success;
 }
 
 

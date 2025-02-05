@@ -1,5 +1,5 @@
 main: writingToScreen.o basic_sdl_functions.o
-	g++ writingToScreen.o basic_sdl_functions.o -D_REENTRANT -lSDL2 -o main
+	g++ writingToScreen.o basic_sdl_functions.o -D_REENTRANT -lSDL2 -lSDL2_image -o main
 
 writingToScreen.o: writingToScreen.cpp
 	g++ -c writingToScreen.cpp -o writingToScreen.o

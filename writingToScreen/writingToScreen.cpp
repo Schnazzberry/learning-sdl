@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include "../common/includes/basic_sdl_functions.h"
 
@@ -16,7 +17,7 @@ SDL_Window** gWindow = new SDL_Window*;
 SDL_Surface** gScreenSurface = new SDL_Surface*;
 
 //The image we will load and show on the screen
-SDL_Surface** imgSurfaces = new SDL_Surface*[IMAGE_SURFACE_COUNT];
+SDL_Surface** imgSurface = new SDL_Surface*;
 
 //Window Dimensions
 int SCREEN_WIDTH = 640;
@@ -27,8 +28,8 @@ void terminate() {
 	delete gWindow;
 	delete gScreenSurface;
 
-	closeAllSurfaces(imgSurfaces, IMAGE_SURFACE_COUNT);
-	delete[] imgSurfaces;
+	close(imgSurface);
+	delete[] imgSurface;
 
 	SDL_Quit();
 }
@@ -36,7 +37,7 @@ void terminate() {
 int main(int argc, char* args[])
 {
 	//path to image associated with imgSurfaces
-    std::string filenames[IMAGE_SURFACE_COUNT] = {"media/helloworld.bmp"};
+    std::string filename = "media/helloworld.bmp";
 	
 	//Start up SDL and create window
 	if (!init(gWindow, gScreenSurface, SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -46,7 +47,7 @@ int main(int argc, char* args[])
 	else
     { 
 		// Load media
-		if (!loadMedia(imgSurfaces, filenames, IMAGE_SURFACE_COUNT, (*gScreenSurface)->format))
+		if (!loadMedia(imgSurface, filename, gScreenSurface))
         {
 			printf("Failed to load media!\n");
 		}
@@ -55,7 +56,7 @@ int main(int argc, char* args[])
 			//Apply the image
 			//printf("image.w = %d image.h = %d\nscreen.w = %d screen.h = %d\n", SDL_GetWindowSurface(gWindow)->w,1,1,1);
 
-			if (SDL_BlitSurface(imgSurfaces[IMAGE_SURFACE_DEFAULT], NULL, *gScreenSurface, NULL) == -1) {
+			if (SDL_BlitSurface(*imgSurface, NULL, *gScreenSurface, NULL) == -1) {
 				printf("ERROR!\n");
 			}
 

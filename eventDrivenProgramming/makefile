@@ -1,5 +1,5 @@
 main: keyPresses.o basic_sdl_functions.o
-	g++ keyPresses.o basic_sdl_functions.o -D_REENTRANT -lSDL2 -o main
+	g++ keyPresses.o basic_sdl_functions.o -D_REENTRANT -lSDL2 -lSDL2_image -o main
 
 keyPresses.o: keyPresses.cpp
 	g++ -c keyPresses.cpp -o keyPresses.o

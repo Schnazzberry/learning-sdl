@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include "../common/includes/basic_sdl_functions.h"
 
@@ -61,7 +62,7 @@ int main(int argc, char* args[])
     } 
     else
     {
-        if(!loadMedia(pkeyPressSurfaces, paths, KEY_PRESS_SURFACE_TOTAL,(*pScreenSurface)->format)) {
+        if(!loadAllMedia(pkeyPressSurfaces, paths, KEY_PRESS_SURFACE_TOTAL, pScreenSurface)) {
             printf("Failed to load media! Terminating Program.\n");
         } 
         else
