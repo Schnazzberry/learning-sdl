@@ -27,6 +27,8 @@ void terminate() {
     pIMGSurface = NULL;
     
     SDL_Quit();
+
+    printf("Program Complete! Terminating Program.\n");
 }
 
 
@@ -34,7 +36,7 @@ int main(int argc, char* args[])
 {
     std::string imgPath = "media/loaded.png";
 
-    if(!init(pWindow, pScreenSurface)) {
+    if(!initOLD(pWindow, pScreenSurface)) {
         printf("Failed to initilize. Terminating Program.");
     }
     else if (!loadMedia(pIMGSurface, imgPath, pScreenSurface)) {
@@ -45,6 +47,8 @@ int main(int argc, char* args[])
         if( SDL_BlitSurface(*pIMGSurface, NULL, *pScreenSurface, NULL) == -1) {
             printf("Error Blitting Surface!/n");
         }
+
+        SDL_UpdateWindowSurface(*pWindow);
 
         //Hack to get window to stay up
         SDL_Event e;
@@ -58,6 +62,8 @@ int main(int argc, char* args[])
 			} 
 		}
     }
+
+    terminate();
 
     return 0;
 }

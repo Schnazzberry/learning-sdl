@@ -57,7 +57,7 @@ int main(int argc, char* args[])
     paths[KEY_PRESS_SURFACE_LEFT] = "media/left.bmp";
     paths[KEY_PRESS_SURFACE_RIGHT] = "media/right.bmp";
 
-    if(!init(pWindow, pScreenSurface)) {
+    if(!initOLD(pWindow, pScreenSurface)) {
         printf("Failed to initialize! Terminating Program.\n");
     } 
     else

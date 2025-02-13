@@ -40,7 +40,7 @@ int main(int argc, char* args[])
     std::string filename = "media/helloworld.bmp";
 	
 	//Start up SDL and create window
-	if (!init(gWindow, gScreenSurface, SCREEN_WIDTH, SCREEN_HEIGHT))
+	if (!initOLD(gWindow, gScreenSurface, SCREEN_WIDTH, SCREEN_HEIGHT))
     {
 		printf("Failed to initialize!\n");
 	}

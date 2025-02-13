@@ -7,9 +7,12 @@
 #ifndef BASIC_SDL_FUNCTIONS_H
 #define BASIC_SDL_FUNCTIONS_H
 
-//Starts up SDL and creates window and gets window surface
-bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480);
 
+//Starts up SDL and creates window and gets window surface. Initializes OpenGL Context.
+bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, SDL_GLContext* pOpenGLContext, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480);
+
+//WITHOUT OPENGL Starts up SDL and creates window and gets window surface
+bool initOLD(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480);
 
 //Loads media into list of surfaces
 bool loadAllMedia(SDL_Surface* pMediaSurfaces[], const std::string paths[], const int numSurfaces, SDL_Surface** pScreenSurface);

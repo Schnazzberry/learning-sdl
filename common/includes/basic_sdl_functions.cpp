@@ -4,8 +4,8 @@
 #include <string>
 
 
-//Starts up SDL and creates window SDL_INIT_VIDEO & IMG_INIT
-bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
+//Starts up SDL and creates window SDL_INIT_VIDEO & IMG_INIT & SDL_WINDOW_OPENGL
+bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, SDL_GLContext* pOpenGlContext, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
     SDL_Window* window;
     SDL_Surface* screenSurface;
 	//Initialization flag
@@ -17,15 +17,29 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_W
 		success = false;
 	}
 	else {
-		//Create window
+		//Set GL Attributes
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		
+		//Create window with SDL_WINDOW_OPENGL
 		window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
 		
 		if(window == NULL) {
 			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			success = false;
 		}
 		else {
+			//Initialize OpenGLContext
+			*pOpenGlContext = SDL_GL_CreateContext(window);
+			if (pOpenGlContext = NULL) {
+				printf("SDL_GLContext could not initialize! SDL_Error: %s\n", SDL_GetError());
+				success = false;
+			}
 			//Initialize PNG Loading
 			int imgFlags = IMG_INIT_PNG;
 			if ( !(IMG_Init(imgFlags) & imgFlags) ) {
@@ -136,3 +150,48 @@ void closeAllSurfaces(SDL_Surface* pSurfaces[], int numSurfaces) {
     }
 }
 
+
+
+
+
+
+//Starts up SDL and creates window SDL_INIT_VIDEO & IMG_INIT
+bool initOLD(SDL_Window** pWindow, SDL_Surface** pScreenSurface, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
+    SDL_Window* window;
+    SDL_Surface* screenSurface;
+	//Initialization flag
+	bool success = true;
+
+	//Initialize SDL
+	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+		success = false;
+	}
+	else {
+		//Create window
+		window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		
+		if(window == NULL) {
+			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			success = false;
+		}
+		else {
+			//Initialize PNG Loading
+			int imgFlags = IMG_INIT_PNG;
+			if ( !(IMG_Init(imgFlags) & imgFlags) ) {
+				printf("SDL_image could not initialize! SDL_image Error: %s/n", SDL_GetError());
+				success = false;
+			}
+			else {
+				//Get window surface
+				screenSurface = SDL_GetWindowSurface(window);
+			}
+		}
+	}
+
+    *pWindow = window;
+    *pScreenSurface = screenSurface;
+
+	return success;
+}
