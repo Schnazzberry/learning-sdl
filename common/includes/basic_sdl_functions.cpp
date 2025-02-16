@@ -2,7 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <string>
-
+#include "../includes/glad.h"
 
 //Starts up SDL and creates window SDL_INIT_VIDEO & IMG_INIT & SDL_WINDOW_OPENGL
 bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, SDL_GLContext* pOpenGlContext, const int SCREEN_WIDTH=640, const int SCREEN_HEIGHT=480) {
@@ -19,7 +19,7 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, SDL_GLContext* pOp
 	else {
 		//Set GL Attributes
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -38,6 +38,12 @@ bool init(SDL_Window** pWindow, SDL_Surface** pScreenSurface, SDL_GLContext* pOp
 			*pOpenGlContext = SDL_GL_CreateContext(window);
 			if (pOpenGlContext = NULL) {
 				printf("SDL_GLContext could not initialize! SDL_Error: %s\n", SDL_GetError());
+				success = false;
+			}
+			
+			//Initialize the Glad Library
+			if(!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
+				printf("Glad was not initialized\n");
 				success = false;
 			}
 			//Initialize PNG Loading

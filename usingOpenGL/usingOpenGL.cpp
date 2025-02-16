@@ -2,6 +2,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include "../common/includes/basic_sdl_functions.h"
+#include "../common/includes/glad.h"
 
 // Globals
 int gScreenHeight = 640;
@@ -14,13 +15,18 @@ SDL_Surface** pDisplayedSurface = new SDL_Surface*;
 SDL_GLContext* pOpenGLContext = new SDL_GLContext;
 
 
-void GetInput() {
-    SDL_Event event;
-    bool quit = false;
+void GetOpenGLInfo() {
+    printf("Vendor: %s\nRenderer; %s\nVersion: %s\nShading Language Version: %s\n", 
+        glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
+    
+    return;
+}
+
+void GetInput(SDL_Event event, bool *quit) {
     while(SDL_PollEvent(&event) != 0) {
         if(event.type == SDL_QUIT) {
             printf("Goodbye!\n");
-            quit = true;
+            *quit = true;
         }
     }
     return;
@@ -38,15 +44,22 @@ void Draw() {
 
 
 void MainLoop() {
+    SDL_Event event;
+    bool quit = false;
 
-    GetInput();
+    GetOpenGLInfo();
 
-    PreDraw();
+    while (!quit)
+    {    
+        GetInput(event, &quit);
 
-    Draw();
+        PreDraw();
 
-    //Update the screen
-    SDL_GL_SwapWindow(*pWindow);
+        Draw();
+
+        //Update the screen
+        SDL_GL_SwapWindow(*pWindow);
+    }
 }
 void terminate() {
     close(pWindow);
